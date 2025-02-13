@@ -6,6 +6,7 @@ from .serializers import CriteriosProvaSerializer, QuestaoSerializer, GabaritoSe
 from groq import Groq  # Importe a biblioteca do Groq
 import os
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -93,12 +94,12 @@ class GerarProvaView(generics.CreateAPIView):
       # Adapte este código para lidar com o formato exato da resposta do Groq
         try:
             resposta_json = chat_completion.choices[0].message.content
-            import json
             resposta = json.loads(resposta_json)
             questoes = resposta.get("questoes", [])
 
             # Valida e formata os dados das questões
             questoes_formatadas = []
+            
             for questao in questoes:
                 tipo = questao.get("tipo")
                 enunciado = questao.get("enunciado")
