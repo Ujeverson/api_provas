@@ -120,11 +120,11 @@ class BuscaQuestoes(TestCase): #Classe para testar os serviços, separadamente
 
         #Dados de entrada
         dados_entrada = {
-        'tema': 'Teste',
+        'tema': 'Equações de primeiro grau',
         'dificuldade': NivelDificuldade.LEMBRAR,
         'quantidade_questoes': 1,
         'tipos_questoes': TipoQuestao.MULTIPLA_ESCOLHA,
-        'curriculo': 'Teste de currículo'
+        'curriculo': 'Matemática ensino fundamental'
         }
         # Cria uma instância de CriteriosProva
         criterios = CriteriosProva.objects.create(**dados_entrada)
@@ -150,11 +150,11 @@ class BuscaQuestoes(TestCase): #Classe para testar os serviços, separadamente
         """
         #Dados de entrada
         dados_entrada = {
-        'tema': 'Teste',
+        'tema': 'Sistema solar',
         'dificuldade': NivelDificuldade.LEMBRAR,
         'quantidade_questoes': 1,
         'tipos_questoes': TipoQuestao.DISSERTATIVA,
-        'curriculo': 'Teste de currículo'
+        'curriculo': 'Ciências ensino fundamental'
         }
         # Cria uma instância de CriteriosProva
         criterios = CriteriosProva.objects.create(**dados_entrada)
@@ -179,11 +179,11 @@ class BuscaQuestoes(TestCase): #Classe para testar os serviços, separadamente
         """
         #Dados de entrada
         dados_entrada = {
-        'tema': 'Teste',
+        'tema': 'Leis de Newton',
         'dificuldade': NivelDificuldade.LEMBRAR,
         'quantidade_questoes': 1,
         'tipos_questoes': TipoQuestao.VERDADEIRO_FALSO,
-        'curriculo': 'Teste de currículo'
+        'curriculo': 'Física ensino médio'
         }
         # Cria uma instância de CriteriosProva
         criterios = CriteriosProva.objects.create(**dados_entrada)
