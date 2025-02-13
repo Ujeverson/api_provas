@@ -1,0 +1,23 @@
+# Geral
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+db.sqlite3
+db.sqlite3-journal
+*.log
+
+# VSCode
+.vscode/
+
+# Ambiente Virtual (dependendo do nome que você usou)
+venv/
+env/
+
+# Arquivos estáticos gerados (vamos configurar isso mais tarde)
+static/
+
+# Arquivos de mídia (se você for usar upload de arquivos)
+media/
