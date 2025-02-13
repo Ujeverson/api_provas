@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',  
     'provas',
+    'drf_yasg',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -128,14 +130,27 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication', #JWT - implementa a autenticação
+    ],
+    
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated', #usado para JWT, por exemplo.
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication', #autenticação padrão do django
-        'rest_framework.authentication.BasicAuthentication',#autenticação padrão do django
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication', #JWT - implementar a autenticação
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', #Adiciona paginação
-    'PAGE_SIZE': 10 # Define o tamanho da página
+    
+}
+
+from datetime import timedelta # Importe timedelta
+
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': "Autenticação JWT usando o formato: Bearer <seu_token>"
+        }
+    },
 }
