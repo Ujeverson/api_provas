@@ -79,11 +79,26 @@ WSGI_APPLICATION = 'gerador_provas.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DATABASES = {
+"""
+ DATABASES = {
+   
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    }
+   
+    
+}   
+    
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'provas_banco_de_dados',       # Nome do seu banco de dados local
+        'USER': 'meu_usuario',              # Seu usuário do PostgreSQL
+        'PASSWORD': 'minha_senha',          # Sua senha do PostgreSQL
+        'HOST': 'localhost',                 # Ou o endereço do seu servidor PostgreSQL
+        'PORT': '5432',                      # Porta padrão do PostgreSQL
     }
 }
 
