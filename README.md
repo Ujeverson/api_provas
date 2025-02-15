@@ -33,12 +33,10 @@ Esta API RESTful, construída com Django REST Framework e Python, permite a cria
 *   **Documentação:** drf-yasg (Swagger/Redoc)
 *   **LLM:** Groq API
 *   **Banco de Dados (Desenvolvimento):** SQLite
-*   **Banco de Dados (Produção):** SQLite (pode ser facilmente substituído por PostgreSQL no Google Cloud SQL ou em outras plataformas)
-*   **Servidor Web (Produção):** gunicorn
-*   **Deploy:** Google Cloud Platform (App Engine) / AWS Lightsail
+*   **Banco de Dados (Produção):** SQLite
 *   **Testes:** unittest, mock
 *   **Versionamento:** Git
-*   **Outros:** requests, python-dotenv, reportlab (opcional)
+*   **Outros:** requests, python-dotenv
 
 ## ⚙️ Pré-requisitos
 
@@ -46,7 +44,6 @@ Esta API RESTful, construída com Django REST Framework e Python, permite a cria
 *   pip
 *   virtualenv
 *   Git
-*   Conta no Google Cloud Platform (GCP) *ou* AWS Lightsail (opcional)
 *   Chave de API do Groq
 
 ## 🚀 Instalação e Execução (Local)
