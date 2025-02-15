@@ -22,7 +22,7 @@ Esta API RESTful, construída com Django REST Framework e Python, permite a cria
 *   **Autenticação JWT:** Protege a API com autenticação usando JSON Web Tokens (JWT).
 *   **Documentação Interativa (Swagger/Redoc):** Fornece documentação completa e interativa da API, permitindo testar os endpoints diretamente no navegador.
 *   **Testes Automatizados:** Inclui testes unitários e de integração para garantir a qualidade do código e o funcionamento correto da API.
-*   **Deploy no Google Cloud (App Engine):** Pronta para deploy no Google Cloud Platform (GCP) usando o App Engine com buildpacks (instruções detalhadas abaixo).  Também pode ser implantada em outras plataformas, como AWS Lightsail (instruções simplificadas abaixo).
+
 
 ## 🛠️ Tecnologias Utilizadas
 
