@@ -30,8 +30,9 @@ schema_view = get_schema_view(
     openapi.Info(
         title="API de Geração de Provas",
         default_version='v1',
-        description="API para criação de provas personalizadas com base em critérios como tema, nível de dificuldade (Taxonomia de Bloom) e formato das questões.",
-        terms_of_service="https://www.google.com/policies/terms/", 
+        description="Ujeverson Tavares Sampaio \n \n API para criação de provas personalizadas com base em critérios como tema, nível de dificuldade (Taxonomia de Bloom) e formato das questões. \n \n Projeto final da disciplina de Construção de APIs para Inteligência Artificial da Especialização em Sistemas e Agentes Inteligentes UFG.",
+        
+        terms_of_service="https:bit.ly/ujeverson", 
         contact=openapi.Contact(email="ujeverson@gmail.com"),  
         license=openapi.License(name="MIT License"),  
     ),
