@@ -4,8 +4,9 @@ from rest_framework import status
 from rest_framework.test import APIClient
 from .models import CriteriosProva, Questao, Gabarito, NivelDificuldade, TipoQuestao
 from .serializers import CriteriosProvaSerializer
-from unittest.mock import patch  # Importe 'patch'
-from django.contrib.auth.models import User
+from unittest.mock import patch
+from django.contrib.auth.models import User  # Importe o modelo User
+
 
 # --- Testes Unitários ---
 
@@ -13,20 +14,22 @@ class NivelDificuldadeTestCase(TestCase):
     def test_niveis_dificuldade(self):
         self.assertEqual(NivelDificuldade.LEMBRAR, 'lembrar')
         self.assertEqual(NivelDificuldade.ENTENDER, 'entender')
-        # ... adicione asserts para os outros níveis ...
+        self.assertEqual(NivelDificuldade.APLICAR, 'aplicar')
+        self.assertEqual(NivelDificuldade.ANALISAR, 'analisar')
+        self.assertEqual(NivelDificuldade.AVALIAR, 'avaliar')
+        self.assertEqual(NivelDificuldade.CRIAR, 'criar')
 
 class TipoQuestaoTestCase(TestCase):
     def test_tipos_questao(self):
         self.assertEqual(TipoQuestao.MULTIPLA_ESCOLHA, 'multipla_escolha')
-        # ... adicione asserts para os outros tipos ...
-
+        self.assertEqual(TipoQuestao.DISSERTATIVA, 'dissertativa')
+        self.assertEqual(TipoQuestao.VERDADEIRO_FALSO, 'verdadeiro_falso')
 
 # --- Testes de Integração ---
-
 class GerarProvaAPITestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.url = reverse('gerar-prova')  # Obtém a URL do endpoint pelo nome
+        self.url = reverse('gerar-prova')
         self.dados_validos = {
             'tema': 'Teste',
             'dificuldade': NivelDificuldade.LEMBRAR,
@@ -34,20 +37,17 @@ class GerarProvaAPITestCase(TestCase):
             'tipos_questoes': f'{TipoQuestao.MULTIPLA_ESCOLHA},{TipoQuestao.DISSERTATIVA}',
             'curriculo': 'Teste de currículo'
         }
-        self.dados_invalidos = {  # Exemplo de dados inválidos
-            'tema': '',  # Tema vazio
+        self.dados_invalidos = {
+            'tema': '',
             'dificuldade': 'invalido',
             'quantidade_questoes': -1,
             'tipos_questoes': 'tipo_invalido',
         }
-        # Dados de um usuário para autenticação, se for testar endpoints protegidos
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.client.force_authenticate(user=self.user)
 
-
-    @patch('provas.views.client.chat.completions.create') # Mock da chamada à API do Groq
+    @patch('provas.views.client.chat.completions.create')
     def test_criar_prova_com_sucesso(self, mock_groq_create):
-        # Configura o mock para retornar um valor simulado
         mock_groq_create.return_value.choices[0].message.content = """
         {
             "questoes": [
@@ -72,7 +72,6 @@ class GerarProvaAPITestCase(TestCase):
         self.assertEqual(CriteriosProva.objects.count(), 1)
         self.assertEqual(Questao.objects.count(), 2)
         self.assertEqual(Gabarito.objects.count(), 1)
-        # Adicione mais verificações, se necessário (ex: verificar o conteúdo da resposta)
 
     def test_criar_prova_com_dados_invalidos(self):
         response = self.client.post(self.url, self.dados_invalidos, format='json')
@@ -94,11 +93,9 @@ class GerarProvaAPITestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-
 class BuscaQuestoes(TestCase): #Classe para testar os serviços, separadamente
     def setUp(self):
         self.client = APIClient()
-        # Dados de um usuário para autenticação, se for testar endpoints protegidos
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.client.force_authenticate(user=self.user)
 
@@ -120,11 +117,11 @@ class BuscaQuestoes(TestCase): #Classe para testar os serviços, separadamente
 
         #Dados de entrada
         dados_entrada = {
-        'tema': 'Equações de primeiro grau',
+        'tema': 'Teste',
         'dificuldade': NivelDificuldade.LEMBRAR,
         'quantidade_questoes': 1,
         'tipos_questoes': TipoQuestao.MULTIPLA_ESCOLHA,
-        'curriculo': 'Matemática ensino fundamental'
+        'curriculo': 'Teste de currículo'
         }
         # Cria uma instância de CriteriosProva
         criterios = CriteriosProva.objects.create(**dados_entrada)
@@ -150,11 +147,11 @@ class BuscaQuestoes(TestCase): #Classe para testar os serviços, separadamente
         """
         #Dados de entrada
         dados_entrada = {
-        'tema': 'Sistema solar',
+        'tema': 'Teste',
         'dificuldade': NivelDificuldade.LEMBRAR,
         'quantidade_questoes': 1,
         'tipos_questoes': TipoQuestao.DISSERTATIVA,
-        'curriculo': 'Ciências ensino fundamental'
+        'curriculo': 'Teste de currículo'
         }
         # Cria uma instância de CriteriosProva
         criterios = CriteriosProva.objects.create(**dados_entrada)
@@ -179,11 +176,11 @@ class BuscaQuestoes(TestCase): #Classe para testar os serviços, separadamente
         """
         #Dados de entrada
         dados_entrada = {
-        'tema': 'Leis de Newton',
+        'tema': 'Teste',
         'dificuldade': NivelDificuldade.LEMBRAR,
         'quantidade_questoes': 1,
         'tipos_questoes': TipoQuestao.VERDADEIRO_FALSO,
-        'curriculo': 'Física ensino médio'
+        'curriculo': 'Teste de currículo'
         }
         # Cria uma instância de CriteriosProva
         criterios = CriteriosProva.objects.create(**dados_entrada)
