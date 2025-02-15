@@ -1,12 +1,11 @@
-from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import CriteriosProva, Questao, Gabarito
 from .serializers import CriteriosProvaSerializer, QuestaoSerializer, GabaritoSerializer
 from groq import Groq  # Importe a biblioteca do Groq
 import os
+import json #Já importe aqui
 from dotenv import load_dotenv
-import json
 
 load_dotenv()
 
@@ -14,15 +13,6 @@ load_dotenv()
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 class GerarProvaView(generics.CreateAPIView):
-    """
-    Cria uma nova prova com base nos critérios fornecidos.
-
-    Este endpoint recebe um JSON com os critérios da prova (tema, dificuldade,
-    quantidade de questões, tipos de questões e currículo opcional) e usa a API
-    do Groq para gerar as questões.
-
-    Retorna os dados da prova criada, incluindo as questões e o gabarito.
-    """
     serializer_class = CriteriosProvaSerializer
 
     def create(self, request, *args, **kwargs):
@@ -39,7 +29,9 @@ class GerarProvaView(generics.CreateAPIView):
                     "content": prompt,
                 }
             ],
-            model="mixtral-8x7b-32768",  # Escolha o modelo
+            model="mixtral-8x7b-32768",  # Modelo da LLM
+            
+        
         )
 
         # --- Processar a resposta do Groq ---
@@ -48,6 +40,7 @@ class GerarProvaView(generics.CreateAPIView):
         # --- Criar as questões no banco de dados ---
         for questao_data in questoes_geradas:
             Questao.objects.create(prova=criterios, **questao_data)
+
         # --- Criar o gabarito ---
         respostas = {str(questao.id): questao.resposta for questao in criterios.questoes.all()}
         Gabarito.objects.create(prova=criterios, respostas=respostas)
@@ -58,7 +51,7 @@ class GerarProvaView(generics.CreateAPIView):
         )
 
     def criar_prompt(self, criterios):
-        # Constrói o prompt para o Groq, usando os critérios da prova
+        # Constrói o prompt para o Groq
         prompt = f"""
         Gere {criterios.quantidade_questoes} questões sobre o tema '{criterios.tema}',
         com nível de dificuldade '{criterios.get_dificuldade_display()}'
@@ -91,7 +84,6 @@ class GerarProvaView(generics.CreateAPIView):
 
     def processar_resposta_groq(self, chat_completion, criterios):
       # Extrai as questões e respostas do JSON retornado pelo Groq
-      # Adapte este código para lidar com o formato exato da resposta do Groq
         try:
             resposta_json = chat_completion.choices[0].message.content
             resposta = json.loads(resposta_json)
@@ -99,7 +91,6 @@ class GerarProvaView(generics.CreateAPIView):
 
             # Valida e formata os dados das questões
             questoes_formatadas = []
-            
             for questao in questoes:
                 tipo = questao.get("tipo")
                 enunciado = questao.get("enunciado")
@@ -108,7 +99,7 @@ class GerarProvaView(generics.CreateAPIView):
                 opcoes = questao.get("opcoes", None)
 
                 if not all([tipo, enunciado, resposta_questao]):
-                    continue  # Pula questões incompletas
+                    continue
 
                 questao_formatada = {
                     "tipo": tipo,
@@ -123,16 +114,12 @@ class GerarProvaView(generics.CreateAPIView):
         except (json.JSONDecodeError, AttributeError) as e:
             print(f"Erro ao processar a resposta do Groq: {e}")
             return []
-
 class DetalharProvaView(generics.RetrieveAPIView):
     queryset = CriteriosProva.objects.all()
     serializer_class = CriteriosProvaSerializer
-    lookup_field = 'id' #define o id como chave de busca
-    #permission_classes = [permissions.IsAuthenticated] # descomentar quando implementar autenticação
+    lookup_field = 'id'
 
 class DetalharGabaritoView(generics.RetrieveAPIView):
     queryset = Gabarito.objects.all()
     serializer_class = GabaritoSerializer
-    lookup_field = 'prova__id' #busca pelo id da prova, e não do gabarito
-    #permission_classes = [permissions.IsAuthenticated] # autenticação
-
+    lookup_field = 'prova__id'
