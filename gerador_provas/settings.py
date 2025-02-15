@@ -146,6 +146,10 @@ REST_FRAMEWORK = {
     
 }
 
+
+
+
+
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Bearer': {
